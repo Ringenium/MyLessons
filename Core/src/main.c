@@ -49,11 +49,32 @@ RCC->AHB1ENR|=RCC_AHB1ENR_GPIOCEN;
 void RccInit(void)
 {
 
+				/*Системная частота от HSE */
+/*
 RCC->CR|=RCC_CR_HSEON;                   //включение внешнего кварца
 while(!(RCC->CR & RCC_CR_HSERDY));       //флаг готовности HSERDY
 FLASH->ACR|=FLASH_ACR_LATENCY_5WS;     	 //задержка для флэш памяти
 RCC->CFGR|=RCC_CFGR_SW_HSE;			     //Внешний кварц выбран в качестве системной частоты
 while(!(RCC->CFGR &= RCC_CFGR_SWS_HSE)); //Проверка тактирования от внешнего кварца
+*/
+				/*Системная частота от PLL*/
+RCC->CR|=RCC_CR_HSEON;                   //включение внешнего кварца
+while(!(RCC->CR & RCC_CR_HSERDY));       //флаг готовности HSERDY
+FLASH->ACR|=FLASH_ACR_LATENCY_5WS;     	 //задержка для флэш памяти
+
+
+RCC->PLLCFGR|=RCC_PLLCFGR_PLLSRC;  //HSE на вход PLL
+
+RCC->PLLCFGR|=RCC_PLLCFGR_PLLM_2;  // /M (Поделил на 4, получил 2 МГц)
+RCC->PLLCFGR|=RCC_PLLCFGR_PLLN_1|RCC_PLLCFGR_PLLN_4|RCC_PLLCFGR_PLLN_5; // *N  (Умножил на 50 получил 100МГц)
+RCC->PLLCFGR|=RCC_PLLCFGR_PLLP_0;  // /P (Поделил на 4, получил 25 МГц)
+
+
+RCC->CFGR|=RCC_CFGR_SW_PLL; //PLL в качестве SYSCLK
+RCC->CR|=RCC_CR_PLLON;		//включение PLL
+while(!(RCC->CFGR &= RCC_CFGR_SWS_PLL)); //Проверка тактирования от PLL
+
+
 
 
 //Вывод частот на пины
