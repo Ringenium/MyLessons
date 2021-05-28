@@ -19,7 +19,7 @@ OBJCOPY_BIN :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-CMSIS/src \
-Core/src \
-Startup \
+Core/Src \
+Core/Startup \
+Drivers/STM32F0xx_HAL_Driver/Src \
 

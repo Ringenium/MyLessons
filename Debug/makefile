@@ -8,9 +8,9 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include Startup/subdir.mk
--include Core/src/subdir.mk
--include CMSIS/src/subdir.mk
+-include Drivers/STM32F0xx_HAL_Driver/Src/subdir.mk
+-include Core/Startup/subdir.mk
+-include Core/Src/subdir.mk
 -include subdir.mk
 -include objects.mk
 
@@ -28,34 +28,34 @@ endif
 
 -include ../makefile.defs
 
-BUILD_ARTIFACT_NAME := MyLessons
+BUILD_ARTIFACT_NAME := OpAmp
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX := 
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME).$(BUILD_ARTIFACT_EXTENSION)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-MyLessons.elf \
+OpAmp.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-MyLessons.list \
+OpAmp.list \
 
 OBJCOPY_BIN += \
-MyLessons.bin \
+OpAmp.bin \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: MyLessons.elf secondary-outputs
+main-build: OpAmp.elf secondary-outputs
 
 # Tool invocations
-MyLessons.elf: $(OBJS) $(USER_OBJS) B:\ST\MyLessons\Startup\STM32F407VETX_FLASH.ld
-	arm-none-eabi-gcc -o "MyLessons.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"B:\ST\MyLessons\Startup\STM32F407VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MyLessons.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+OpAmp.elf: $(OBJS) $(USER_OBJS) C:\Users\1\Desktop\OpAmp\STM32F030C8TX_FLASH.ld
+	arm-none-eabi-gcc -o "OpAmp.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"C:\Users\1\Desktop\OpAmp\STM32F030C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="OpAmp.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -64,13 +64,13 @@ default.size.stdout: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-MyLessons.list: $(EXECUTABLES)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "MyLessons.list"
+OpAmp.list: $(EXECUTABLES)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "OpAmp.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-MyLessons.bin: $(EXECUTABLES)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "MyLessons.bin"
+OpAmp.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "OpAmp.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 

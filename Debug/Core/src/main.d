@@ -1,24 +1,54 @@
-Core/src/main.o: ../Core/src/main.c B:/ST/MyLessons/Core/inc/main.h \
- B:/ST/MyLessons/CMSIS/inc/stm32f407xx.h \
- B:/ST/MyLessons/CMSIS/inc/core_cm4.h \
- B:/ST/MyLessons/CMSIS/inc/cmsis_version.h \
- B:/ST/MyLessons/CMSIS/inc/cmsis_compiler.h \
- B:/ST/MyLessons/CMSIS/inc/cmsis_gcc.h \
- B:/ST/MyLessons/CMSIS/inc/mpu_armv7.h \
- B:/ST/MyLessons/CMSIS/inc/system_stm32f4xx.h
+Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_crs.h \
+ ../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h \
+ ../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f030x8.h \
+ ../Drivers/CMSIS/Include/core_cm0.h \
+ ../Drivers/CMSIS/Include/cmsis_version.h \
+ ../Drivers/CMSIS/Include/cmsis_compiler.h \
+ ../Drivers/CMSIS/Include/cmsis_gcc.h \
+ ../Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h \
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_rcc.h \
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_bus.h \
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_system.h \
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_exti.h \
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_cortex.h \
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_utils.h \
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_pwr.h \
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_dma.h \
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_gpio.h
 
-B:/ST/MyLessons/Core/inc/main.h:
+../Core/Inc/main.h:
 
-B:/ST/MyLessons/CMSIS/inc/stm32f407xx.h:
+../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_crs.h:
 
-B:/ST/MyLessons/CMSIS/inc/core_cm4.h:
+../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h:
 
-B:/ST/MyLessons/CMSIS/inc/cmsis_version.h:
+../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f030x8.h:
 
-B:/ST/MyLessons/CMSIS/inc/cmsis_compiler.h:
+../Drivers/CMSIS/Include/core_cm0.h:
 
-B:/ST/MyLessons/CMSIS/inc/cmsis_gcc.h:
+../Drivers/CMSIS/Include/cmsis_version.h:
 
-B:/ST/MyLessons/CMSIS/inc/mpu_armv7.h:
+../Drivers/CMSIS/Include/cmsis_compiler.h:
 
-B:/ST/MyLessons/CMSIS/inc/system_stm32f4xx.h:
+../Drivers/CMSIS/Include/cmsis_gcc.h:
+
+../Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h:
+
+../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_rcc.h:
+
+../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_bus.h:
+
+../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_system.h:
+
+../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_exti.h:
+
+../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_cortex.h:
+
+../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_utils.h:
+
+../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_pwr.h:
+
+../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_dma.h:
+
+../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_gpio.h:

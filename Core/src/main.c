@@ -1,224 +1,313 @@
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 
-void GpioInit(void);
-void RccInit(void);
-void TimInit(void);
-void ExtIntInit(void);
-void UartInit(void);
+/* USER CODE END Includes */
 
-volatile uint8_t But=0;
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
 
+/* USER CODE END PTD */
 
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+
+/* USER CODE BEGIN PV */
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+
+/* USER CODE BEGIN PFP */
+void Gpio_Init(void);
+void Init_Show(void);
+void Init_Button(void);
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
 int main(void)
 {
+  /* USER CODE BEGIN 1 */
 
-	RccInit();
-	GpioInit();
-	TimInit();
-	ExtIntInit();
-	UartInit();
+  /* USER CODE END 1 */
 
-	while(1)
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_SYSCFG);
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+
+  /* System interrupt init*/
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  /* USER CODE BEGIN 2 */
+  Gpio_Init();
+  Init_Button();
+
+  LL_mDelay(500);
+  Init_Show();
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}
+
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config(void)
+{
+  LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
+  while(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_0)
+  {
+  }
+  LL_RCC_HSI_Enable();
+
+   /* Wait till HSI is ready */
+  while(LL_RCC_HSI_IsReady() != 1)
+  {
+
+  }
+  LL_RCC_HSI_SetCalibTrimming(16);
+  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI);
+
+   /* Wait till System clock is ready */
+  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSI)
+  {
+
+  }
+  LL_Init1msTick(8000000);
+  LL_SetSystemCoreClock(8000000);
+}
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+
+  /* GPIO Ports Clock Enable */
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
+
+}
+
+/* USER CODE BEGIN 4 */
+
+/* USER CODE END 4 */
+
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+  __disable_irq();
+  while (1)
+  {
+  }
+  /* USER CODE END Error_Handler_Debug */
+}
+
+void Gpio_Init(void)
+{
+
+	//Port B
+
+	RCC->AHBENR|=RCC_AHBENR_GPIOBEN;
+
+	GPIOB->MODER|=GPIO_MODER_MODER5_0|GPIO_MODER_MODER6_0|GPIO_MODER_MODER7_0;
+	GPIOB->OTYPER&=~GPIO_OTYPER_OT_5|~GPIO_OTYPER_OT_6|~GPIO_OTYPER_OT_7;
+	GPIOB->PUPDR|=GPIO_PUPDR_PUPDR5_1|GPIO_PUPDR_PUPDR6_1|GPIO_PUPDR_PUPDR7_1;
+
+	//Port A
+
+	RCC->AHBENR|=RCC_AHBENR_GPIOAEN;
+
+	GPIOA->MODER|=GPIO_MODER_MODER15_0;
+	GPIOA->OTYPER|=GPIO_OTYPER_OT_15;
+	GPIOA->PUPDR|=GPIO_PUPDR_PUPDR15_0;
+
+	//Work with p-channel transistor
+	GPIOA->BSRR|=GPIO_BSRR_BS_15;
+
+	}
+
+
+void Init_Show(void)
+{
+	//Creeping column
+
+	GPIOB->BSRR|=GPIO_BSRR_BS_5;
+	LL_mDelay(500);
+	GPIOB->BSRR|=GPIO_BSRR_BR_5;
+	GPIOB->BSRR|=GPIO_BSRR_BS_6;
+	LL_mDelay(500);
+	GPIOB->BSRR|=GPIO_BSRR_BR_6;
+	GPIOB->BSRR|=GPIO_BSRR_BS_7;
+	LL_mDelay(500);
+	GPIOB->BSRR|=GPIO_BSRR_BR_7;
+	LL_mDelay(500);
+
+	//Blinky
+
+	for (uint8_t n = 0; n < 6; ++n)
+		{
+	GPIOB->ODR^=GPIO_ODR_5|GPIO_ODR_6|GPIO_ODR_7;
+	LL_mDelay(350);
+		}
+
+	//Transistor part
+
+	for (uint8_t n = 0; n < 10; ++n)
 	{
-
-		while(!(USART2->SR & USART_SR_TC));
-			USART2->DR=0xAA;
-
-
+		GPIOA->ODR ^= GPIO_ODR_15;
+		LL_mDelay(50);
 	}
 }
 
-
-
-void GpioInit(void)
+void Init_Button(void)
 {
-RCC->AHB1ENR|=RCC_AHB1ENR_GPIOAEN;
-RCC->AHB1ENR|=RCC_AHB1ENR_GPIOCEN;
+	//INIT BUTTON 1//
 
-	/*PINA6*/
-	GPIOA->MODER|=GPIO_MODER_MODE6_0;
-	GPIOA->OTYPER|=GPIO_OTYPER_OT6;
-	GPIOA->PUPDR|=GPIO_PUPDR_PUPD6_0;
-	GPIOA->BSRR|=GPIO_BSRR_BS6;
+	RCC->AHBENR|=RCC_AHBENR_GPIOBEN;
 
-	/*PINA7*/
+	GPIOB->MODER&=~GPIO_MODER_MODER4;
+	GPIOB->PUPDR&=~GPIO_PUPDR_PUPDR4;
 
-	GPIOA->MODER|=GPIO_MODER_MODE7_0;
-	GPIOA->OTYPER|=GPIO_OTYPER_OT7;
-	GPIOA->PUPDR|=GPIO_PUPDR_PUPD7_0;
-	GPIOA->BSRR|=GPIO_BSRR_BS7;
+	SYSCFG->EXTICR[1]|=SYSCFG_EXTICR2_EXTI4_PB;
 
-	/*PINA8*/
+	EXTI->EMR|=EXTI_EMR_EM4;
+	EXTI->IMR|=EXTI_IMR_IM4;
+	EXTI->FTSR|=EXTI_FTSR_FT4;
 
-	GPIOA->MODER|=GPIO_MODER_MODE8_1;
-	GPIOA->OTYPER &=~ GPIO_OTYPER_OT8;
-	GPIOA->AFR[1] &= ~GPIO_AFRH_AFRH0;
+	NVIC_EnableIRQ(EXTI4_15_IRQn);
 
-	/*PINC9*/
-	GPIOC->MODER|=GPIO_MODER_MODE9_1;
-	GPIOC->OTYPER &=~ GPIO_OTYPER_OT9;
-	GPIOC->AFR[1] &= ~GPIO_AFRH_AFRH1;
+	//INIT BUTTON 2//
 
+	RCC->AHBENR|=RCC_AHBENR_GPIOBEN;
+
+	GPIOB->MODER&=~GPIO_MODER_MODER3;
+	GPIOB->PUPDR&=~GPIO_PUPDR_PUPDR3;
+
+	SYSCFG->EXTICR[0]|=SYSCFG_EXTICR1_EXTI3_PB;
+
+	EXTI->EMR|=EXTI_EMR_EM3;
+	EXTI->IMR|=EXTI_IMR_IM3;
+	EXTI->FTSR|=EXTI_FTSR_FT3;
+
+	NVIC_EnableIRQ(EXTI2_3_IRQn);
+
+	//INIT BUTTON 3//
+
+	RCC->AHBENR|=RCC_AHBENR_GPIOBEN;
+
+	GPIOB->MODER&=~GPIO_MODER_MODER2;
+	GPIOB->PUPDR&=~GPIO_PUPDR_PUPDR2;
+
+	SYSCFG->EXTICR[0]|=SYSCFG_EXTICR1_EXTI2_PB;
+
+	EXTI->EMR|=EXTI_EMR_EM2;
+	EXTI->IMR|=EXTI_IMR_IM2;
+	EXTI->FTSR|=EXTI_FTSR_FT2;
+
+	NVIC_EnableIRQ(EXTI2_3_IRQn);
 
 }
 
-void RccInit(void)
+//Interrupt Handling Button 1
+
+void EXTI4_15_IRQHandler(void)
 {
-
-				/*Системная частота от HSE */
-/*
-RCC->CR|=RCC_CR_HSEON;                   //включение внешнего кварца
-while(!(RCC->CR & RCC_CR_HSERDY));       //флаг готовности HSERDY
-FLASH->ACR|=FLASH_ACR_LATENCY_5WS;     	 //задержка для флэш памяти
-RCC->CFGR|=RCC_CFGR_SW_HSE;			     //Внешний кварц выбран в качестве системной частоты
-while(!(RCC->CFGR &= RCC_CFGR_SWS_HSE)); //Проверка тактирования от внешнего кварца
-*/
-
-				/*Системная частота от PLL*/
-
-RCC->CR|=RCC_CR_HSEON;                   //включение внешнего кварца
-while(!(RCC->CR & RCC_CR_HSERDY));       //флаг готовности HSERDY
-FLASH->ACR|=FLASH_ACR_LATENCY_5WS;     	 //задержка для флэш памяти
-
-RCC->PLLCFGR|=RCC_PLLCFGR_PLLSRC; 		 //HSE на вход PLL
-
-RCC->PLLCFGR|=RCC_PLLCFGR_PLLM_2;  		// /M (Поделил на 4, получил 2 МГц) frequency is between 1 and 2 MHz.
-RCC->PLLCFGR|=RCC_PLLCFGR_PLLN_1|RCC_PLLCFGR_PLLN_4|RCC_PLLCFGR_PLLN_5; // *N  (Умножил на 50 получил 100МГц) frequency is between 100 and 432 MHz
-RCC->PLLCFGR|=RCC_PLLCFGR_PLLP_0;  		// /P (Поделил на 4, получил 25 МГц)
-
-RCC->CR|=RCC_CR_PLLON;				     //включение PLL
-while(!(RCC->CR & RCC_CR_PLLRDY));	     //флаг готовности PLLRDY
-RCC->CFGR|=RCC_CFGR_SW_PLL; 			 //PLL в качестве SYSCLK
-RCC->CFGR|=RCC_CFGR_HPRE_DIV2;			 // /2 получаю 12.5MHz настройка AHB делителя
-while(!(RCC->CFGR &= RCC_CFGR_SWS_PLL)); //Проверка тактирования от PLL
-
-
-//Вывод частот на пины
-//MCO1-HSE (PA8)
-RCC->CFGR|=RCC_CFGR_MCO1_1; //Выбор HSE
-
-//MCO2-System clock (PC9)
-RCC->CFGR&= ~RCC_CFGR_MCO2; //Выбор SYSCLK
-
-
-RCC->CFGR|= RCC_CFGR_MCO2_0|RCC_CFGR_MCO2_1; //Выбор PLL
-
-}
-
-void TimInit(void)
-{
-				/*Настройка прерывания от таймера по переполнению*/
-
-RCC->APB1ENR|=RCC_APB1ENR_TIM2EN;			//тактирование таймера
-//TIM2->PSC=25000-1;							//PSC=(тактовая частота/1000)-1     (сколько отсчетов в секунду он сделает.Пример частота 25МГц PSC=(25МГц/1000)-1 делим 25МГц на получившиеся 25КГц получаем 1К-за секунду таймер досчитает до 1К)
-TIM2->PSC=8000-1;
-TIM2->ARR=1000-1;							//Значение до которого считает таймер
-TIM2->DIER|=TIM_DIER_UIE;					//прерывание
-TIM2->CR1|=TIM_CR1_CEN;						//statrt timer
-NVIC_EnableIRQ(TIM2_IRQn);					//разрешение прерывания	глобально
-
-}
-
-void ExtIntInit(void)
-{
-	/*Настраиваю кнопку на внешнее прерывание*/
-	RCC->AHB1ENR|=RCC_AHB1ENR_GPIOEEN;
-	RCC->APB2ENR|=RCC_APB2ENR_SYSCFGEN;
-	/*Плавающий вход*/
-	GPIOE->MODER&=~GPIO_MODER_MODE3;
-	GPIOE->PUPDR&=~GPIO_PUPDR_PUPD3;
-
-	/*Внешнее прерывание*/
-	SYSCFG->EXTICR[0]|=SYSCFG_EXTICR1_EXTI3_PE;
-	EXTI->IMR|=EXTI_IMR_MR3;
-	EXTI->FTSR|=EXTI_FTSR_TR3;
-	NVIC_EnableIRQ(EXTI3_IRQn);
-}
-
-void UartInit(void)
-{
-			/*USART1*/
-/*
-	RCC->AHB1ENR|=RCC_AHB1ENR_GPIOAEN;
-
-	GPIOA->AFR[1]|=GPIO_AFRH_AFSEL9_0|GPIO_AFRH_AFSEL9_1|GPIO_AFRH_AFSEL9_2; 		//AF7
-	GPIOA->AFR[1]|=GPIO_AFRH_AFSEL10_0|GPIO_AFRH_AFSEL10_1|GPIO_AFRH_AFSEL10_2;		//AF7
-
-	GPIOA->MODER|=GPIO_MODER_MODE9_1; //AF
-	GPIOA->MODER|=GPIO_MODER_MODE10_1;//AF
-
-	RCC->APB2ENR|=RCC_APB2ENR_USART1EN;
-
-
-	USART1->CR1 &= ~USART_CR1_M; 	//Word length
-	USART1->CR2 &= ~USART_CR2_STOP; //stop bits
-	//USART1->BRR=0x517;				//9600 ((fck+br/2))/9600
-	USART1->BRR=0x341;
-	USART1->CR1|=USART_CR1_TE;		//transmitter enable
-	USART1->CR1|=USART_CR1_RE;		//receiver enable
-	USART1->CR1 |= USART_CR1_RXNEIE;   //Interrupt RX
-	NVIC_EnableIRQ(USART1_IRQn);       //vector interrupt
-	USART1->CR1|=USART_CR1_UE;   	//usart enable
-*/
-
-
-		/*USART2*/
-	//PA2-TX
-	//PA3-RX
-/*
-	RCC->AHB1ENR|=RCC_AHB1ENR_GPIOAEN;
-	GPIOA->AFR[0]|=GPIO_AFRL_AFSEL2_0|GPIO_AFRL_AFSEL2_1|GPIO_AFRL_AFSEL2_2; 		//AF7
-	GPIOA->AFR[0]|=GPIO_AFRL_AFSEL3_0|GPIO_AFRL_AFSEL3_1|GPIO_AFRL_AFSEL3_2;		//AF7
-
-	GPIOA->MODER|=GPIO_MODER_MODE2_1; //AF
-	GPIOA->MODER|=GPIO_MODER_MODE3_1;//AF
-
-	RCC->APB1ENR|=RCC_APB1ENR_USART2EN;
-
-	USART2->CR1 &= ~USART_CR1_M; 	//Word length
-	//USART2->CR2 &= ~USART_CR2_STOP; //stop bits
-	//USART2->BRR=0x517;				//9600 ((fck+br/2))/9600
-	USART2->BRR=0x341;
-	USART2->CR1|=USART_CR1_TE;		//transmitter enable
-	USART2->CR1|=USART_CR1_RE;		//receiver enable
-	USART2->CR1 |= USART_CR1_RXNEIE;   //Interrupt RX
-	NVIC_EnableIRQ(USART2_IRQn);       //vector interrupt
-	USART2->CR1|=USART_CR1_UE;     	   //usart enable
-*/
-
-
-}
-
-
-
-
-
-
-
-void TIM2_IRQHandler(void)
-{
-	//Отработка прерывания//
-GPIOA->ODR ^= ~GPIO_ODR_OD7;
-
-TIM2->SR&= ~TIM_SR_UIF; //сброс прерывания
-}
-
-void EXTI3_IRQHandler(void)
-{
-	while(GPIOE->IDR & GPIO_IDR_ID3);
-	if(!(GPIOE->IDR & GPIO_IDR_ID3))
+	if(EXTI->PR & EXTI_PR_PR4)
 	{
-	EXTI->PR = EXTI_PR_PR3;
-	GPIOA->ODR ^= ~GPIO_ODR_OD6;
-	}
-
-}
-
-void USART2_IRQHandler(void)
-{
-	if(USART1->SR & USART_SR_RXNE)
-	{
-		USART1->SR &= ~USART_SR_RXNE;
+	GPIOB->ODR^=GPIO_ODR_5;
+	EXTI->PR |= EXTI_PR_PR4;
 	}
 }
+
+//Interrupt Handling Button 2/3
+
+void EXTI2_3_IRQHandler(void)
+{
+
+	//BUT2
+if(EXTI->PR & EXTI_PR_PR3)
+{
+	GPIOB->ODR^=GPIO_ODR_6;
+	EXTI->PR |= EXTI_PR_PR3;
+}
+	//BUT3
+if(EXTI->PR & EXTI_PR_PR2)
+{
+	GPIOB->ODR^=GPIO_ODR_7;
+	EXTI->PR |= EXTI_PR_PR2;
+}
+}
+
